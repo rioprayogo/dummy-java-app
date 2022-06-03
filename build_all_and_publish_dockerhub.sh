@@ -5,20 +5,20 @@ echo "dockerhub\`s username: $1"
 cd shopfront
 mvn clean install
 if docker build -t $1/djshopfront . ; then
-  docker push danielbryantuk/djshopfront
+  docker push rioprayogo/djshopfront
 fi
 cd ..
 
 cd productcatalogue
 mvn clean install
 if docker build -t $1/djproductcatalogue . ; then
-  docker push danielbryantuk/djproductcatalogue
+  docker push rioprayogo/djproductcatalogue
 fi
 cd ..
 
 cd stockmanager
 mvn clean install
 if docker build -t $1/djstockmanager . ; then
-  docker push danielbryantuk/djstockmanager
+  docker push rioprayogo/djstockmanager
 fi
 cd ..

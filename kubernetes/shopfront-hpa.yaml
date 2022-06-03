@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopfront-hpa
+  labels:
+    name: shopfront-hpa
+spec:
+  selector:
+    matchLabels:
+      name: shopfront-hpa
+  template:
+    metadata:
+      name: shopfront-hpa
+      labels:
+        name: shopfront-hpa
+    spec:
+      containers:
+        - name: shopfront-hpa
+          image: rioprayogo/djshopfront:latest
+          ports:
+            - containerPort: 3000
+          resources:
+              limits:
+                cpu: 500m
+                memory: 200Mi
+              requests:
+                cpu: 200m
+                memory: 200Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopfront-hpa
+spec:
+  selector:
+    name: shopfront-hpa
+  ports:
+    - port: 3000
+      targetPort: 3000
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: shopfront-hpa
+spec:
+  minReplicas: 1
+  maxReplicas: 5
+  scaleTargetRef:
+    apiVersion: apps/v2
+    kind: Deployment
+    name: shopfront-hpa
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
